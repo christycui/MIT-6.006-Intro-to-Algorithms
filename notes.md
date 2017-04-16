@@ -38,6 +38,9 @@
 ### 3.2 Standard notations and common functions
 - Exponentials: any exponential function with a base strictly greater than 1 grows faster than any polynomial function
 - Logarithms: any positive polynomial function grows faster than any polylogarithmic function
+    + a = b^(log^b a)
+    + We say that a function f(n) is polylogarithmically bounded if f(n) = O(lg^k n) for some constant k.
+    + lg^b n = o(n^a) for any constant a > 0. 
 - Factorial
     + n! = o(n^n)
     + n! = w(2^n)

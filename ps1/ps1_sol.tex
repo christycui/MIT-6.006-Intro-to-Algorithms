@@ -79,7 +79,7 @@ $$
 
 \ifsolution \solution{}
 %%% PROBLEM 1(a) SOLUTION START %%%
-1, 2, 3, 4
+1，2，4，3
 %%% PROBLEM 1(a) SOLUTION END %%%
 \fi
 
@@ -96,7 +96,7 @@ $$
 
 \ifsolution \solution{}
 %%% PROBLEM 1(b) SOLUTION START %%%
-1, 2, 3, 4
+1，4，3，2
 %%% PROBLEM 1(b) SOLUTION END %%%
 \fi
 
@@ -113,7 +113,7 @@ $$
 
 \ifsolution \solution{}
 %%% PROBLEM 1(c) SOLUTION START %%%
-1, 2, 3, 4
+4，1，3，2
 %%% PROBLEM 1(c) SOLUTION END %%%
 \fi
 
@@ -149,7 +149,7 @@ $$
 
 \ifsolution \solution{}
 %%% PROBLEM 2(a) SOLUTION START %%%
-1
+2
 %%% PROBLEM 2(a) SOLUTION END %%%
 \fi
 
@@ -176,7 +176,7 @@ $$
 
 \ifsolution \solution{}
 %%% PROBLEM 2(b) SOLUTION START %%%
-1
+3
 %%% PROBLEM 2(b) SOLUTION END %%%
 \fi
 
@@ -204,7 +204,7 @@ $$
 
 \ifsolution \solution{}
 %%% PROBLEM 2(c) SOLUTION START %%%
-1
+2
 %%% PROBLEM 2(c) SOLUTION END %%%
 \fi
 
@@ -266,7 +266,7 @@ and which are efficient.
 
 \ifsolution \solution{}
 %%% PROBLEM 3(c) SOLUTION START %%%
-1
+2
 %%% PROBLEM 3(c) SOLUTION END %%%
 \fi
 
@@ -300,7 +300,7 @@ and which are efficient.
 
 \ifsolution \solution{}
 %%% PROBLEM 4(a) SOLUTION START %%%
-1
+3
 %%% PROBLEM 4(a) SOLUTION END %%%
 \fi
 
@@ -316,7 +316,7 @@ and which are efficient.
 
 \ifsolution \solution{}
 %%% PROBLEM 4(b) SOLUTION START %%%
-1
+5
 %%% PROBLEM 4(b) SOLUTION END %%%
 \fi
 
@@ -332,7 +332,7 @@ and which are efficient.
 
 \ifsolution \solution{}
 %%% PROBLEM 4(c) SOLUTION START %%%
-1
+2
 %%% PROBLEM 4(c) SOLUTION END %%%
 \fi
 
@@ -348,7 +348,7 @@ and which are efficient.
 
 \ifsolution \solution{}
 %%% PROBLEM 4(d) SOLUTION START %%%
-1
+2
 %%% PROBLEM 4(d) SOLUTION END %%%
 \fi
 
@@ -443,7 +443,18 @@ Hence, we have a contradiction.
 
 \ifsolution \solution{}
 %%% PROBLEM 5 SOLUTION START %%%
-Write your proof here.
+Most efficient correct algorithm is algorithm4.
+
+1. If the peak problem is not empty, then algorithm1 will always return a location.
+
+Say that we start with a problem of size m x n. The recursive subproblem examined by algorithm4 will have dimensions m x (n/2) or m x (n/2 - 1) or (m/2) x n or (m/2 - 1) x n. So, algorithm4 either returns a location at some point, or eventually examines a subproblem with a non-positive number of columns. The only way for the number of columns to become strictly negative, according to the formulas that determine the size of the subproblem, is to have n = 0 or m = 1 at some point. So if algorithm4 doesn't return a location, it must eventually examine an empty subproblem.
+
+We wish to show that there is no way that this can occur. Assume, to the contrary, that algorithm4 does examine an empty subproblem. Just prior to this, it must examine a subproblem of size m x 1 or m x 2 or n x 1 or n x 2. If the problem is of size m x 1 or n x 1, then calculating the maximum of the central column or row is equivalent to calculating the maximum of the entire problem. Hence, the maximum that the algorithm finds must be a peak, and it will halt and return the location. If the problem has dimensions m x 2 or n x 2, then there are two possibilities: either the maximum of the central column is a peak (in which case the algorithm will halt and return the location), or it has a strictly better neighbor in the other column or row (in which case the algorithm will recurse on the non-empty subproblem with dimensions m x 1 or n x 1, thus reducing to the previous case). So algorithm4 must eventually return a location.
+
+2. If algorithm4 rturns a location, it will be a peak in the original problem. 
+
+If algorithm4 returns a location (r1, c1), then that location must have the best value in column c1 or row r1, and must have been a peak within some recursive subproblem. In addition, (r1, c1) has to be the best location seen during the algorithm. Assume, for the sake of contradiction, that (r1, c1) is not also a peak within the original problem. Then as the location (r1, c1) is passed up the chain of recursive calls, it must eventually reach a level where it stops being a peak. At that level, the location next to it, (r2, c1) or (r1, c2) must be adjacent to it and has value greater than (r1, c1). In order for this adjacent value to be not included in the subproblem, it has to have been in the dividing row of diving column. Therefore, this cell must have been examined during the execution of the algorithm. As a result, (r2, c1) or (r1, c2) has value greater than (r1, c1). It contradicts with the fact that (r1, c1) is the best seen value which was stored in the variable bestSeen. 
+
 %%% PROBLEM 5 SOLUTION END %%%
 \fi
 
@@ -458,19 +469,17 @@ that is not a peak).
 %%% PROBLEM 6 SOLUTION START %%%
 \begin{verbatim}
 problemMatrix = [
-    [0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0]
-]
-
-problemMatrix = [
-    [0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0]
+    [ 4,  5,  6,  7,  8,  7,  6,  5,  4,  3,  2],
+    [ 5,  6,  7,  8,  9,  8,  7,  6,  5,  4,  3],
+    [ 6,  7,  8,  9, 10,  11,  8,  7,  6,  5,  4],
+    [ 7,  8,  9, 10, 10, 10,  9,  8,  7,  6,  5],
+    [ 8,  9, 10, 14, 12, 11, 10,  9,  8,  7,  6],
+    [ 7,  8,  9, 10, 11, 10,  9,  8,  7,  6,  5],
+    [ 6,  7,  8,  9, 10,  9,  8,  7,  6,  5,  4],
+    [ 5,  6,  7,  8,  9,  8,  7,  6,  5,  4,  3],
+    [ 4,  5,  6,  7,  8,  7,  6,  5,  4,  3,  2],
+    [ 3,  4,  5,  6,  7,  6,  5,  4,  3,  2,  1],
+    [ 2,  3,  4,  5,  6,  5,  4,  3,  2,  1,  0]
 ]
 \end{verbatim}
 %%% PROBLEM 6 SOLUTION END %%%
