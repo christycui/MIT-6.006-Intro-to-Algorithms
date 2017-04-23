@@ -10,6 +10,24 @@
 
 ### 1.2 Algorithms as a technology
 
+## 2. Getting Started
+### 2.1 Insertion sort
+- insertion sort is an efficient algo for sorting a small number of elements
+- Loop invariants and the correctness of insertion sort:
+    + Initialization: it is true prior to the first iteration of the loop
+    + Maintenance: if it is true before an iteration of the loop, it remains true before the next iteration
+    + Termination: when the loop terminates, the invariant gives us a useful property that helps show that the algo is correct
+
+## 2.2 Analyzing algorithms
+- the best notion for **input size** depends on the problem being studied. e.g. number of items in the input or total number of bits needed or even two numbers for a graph
+- **running time** is the number of primitive operations or steps executed
+- usually **worst-case** running time; in some particular cases, we shall be interested in the **average-case** running time. Often, we shall assume that all inputs of a given size are equally likely, when violated we can use **randomized algorithm**, to allow **probabilistic analysis** and yield an **expected** return
+- it is **the rate of growth** or **order of growth** that interests us
+
+## 2.3 Designing algorithms
+- insertion sort is incremental approach: \Theta(n^2)
+- merge sort is divide-and-conquer approach: \Theta(nlgn)
+
 ## 3. Growth of Functions
 **asymptotic** efficiency of algorithms: we are concerned with how the running time of an algorithm increases with the size of the input *in the limit*, as the size of the input increases without bound
 
@@ -47,3 +65,38 @@
     + lg(n!) = \Theta(n lgn)
 - functional iteration and the iterated log function
 - Fibonacci numbers grow exponentially
+
+## 4. Divide and Conquer
+### 4.3 The substitution method for solving recurrences
+### 4.4 The recursion-tree method for solving recurrences
+### 4.5 The master method for solving recurrences
+
+## 6. Heap Sort
+### 6.1 Heaps
+- heap property: for every node other than the the root, A[Parent(i) >= A[i]]
+- max_heapify: O(lgn)
+- build_max_heap: O(n), produces a max-heap from an unordered input array
+- heapsort: O(nlgn)
+- max_heap_insert, heap_extract_max, heap_increase_key and heap_maximum: O(lgn)
+
+### 6.2 Maintaining the heap property
+
+## 10. Elementary Data Structures
+### 10.4 Representing rooted trees
+- binary trees: p, left, right
+- rooted trees with unbounded branching: left-child, right-sibling
+- other tree representations
+
+## 12. Binary Search Trees
+### 12.1 What is a binary search tree?
+- **binary-search-tree property**: Let x be a node in the binary search tree. If y is a node in the left subtree of x, then y.key <= x.key. If y is a node in the right subtree of x, then y.key >= x.key
+- **inorder tree walk**: it prints the key of the root of a subtree between printing the values in its left subtree and printing those in its right subtree
+- **preorder tree walk**: prints the root before the values in either subtree
+- **postorder tree walk**: prints the root after the values in its subtrees
+- it takes \Theta(n) time to walk an n-node binary search tree
+
+### 12.2 Querying a binary search tree
+- searching takes O(h) time where h is the height of the BTS tree
+- minimum and maximum: O(h)
+- successor and predecessor: O(h)
+- insertion and deletion: insertion - O(h); deletion - O(h) with 3 cases
