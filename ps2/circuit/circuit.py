@@ -344,20 +344,21 @@ class PriorityQueue:
     """Heap-based priority queue implementation."""
     def __init__(self):
         """Initially empty priority queue."""
-        self.heap = []
+        self.heap = [None]
     
     def __len__(self):
         # Number of elements in the queue.
-        return len(self.heap)
+        return len(self.heap) - 1
     
     def append(self, key):
         """Inserts an element in the priority queue."""
         if key is None:
             raise ValueError('Cannot insert None in the queue')
-        self.heap.append(key)
+        
         i = len(self.heap)
+        self.heap.append(key)
         while i > 1:
-            parent = i // 2 - 1
+            parent = i // 2
             if key < self.heap[parent]:
                 # exchange
                 self.heap[i] = self.heap[parent]
@@ -368,7 +369,7 @@ class PriorityQueue:
     
     def min(self):
         """The smallest element in the queue."""
-        return self.heap[0]
+        return self.heap[1]
     
     def pop(self):
         """Removes the minimum element in the queue.
@@ -377,27 +378,39 @@ class PriorityQueue:
             The value of the removed element.
         """
         heap = self.heap
-        popped = heap[0]
-        l = len(heap)
-        if l == 1:
-            return heap.pop()
-        parent = 0
+        heap_min = heap[1]
+        # if only one element left
+        if len(self) == 1:
+            return self.heap.pop(1)
+        # if more than one left -
+        # move the last element to the front 
+        # and do min_heapify(A, 1)
+        heap[1] = heap.pop()
+        parent = 1
         while True:
-            left = 2 * parent + 1
-            right = 2 * parent + 2
-            if left >= l:
+            left = 2*parent
+            right = 2*parent + 1
+            if (left >= len(heap)):
                 break
-            if left == l - 1:
-                self.heap[parent] = self.heap[left]
-                print('break!')
-                break
-            if heap[left] < heap[right]:
-                self.heap[parent] = self.heap[left]
-                parent = left
+            # compare left and right
+            if heap[parent] > heap[left]:
+                smallest = left
             else:
-                self.heap[parent] = self.heap[right]
-                parent = right
-        return popped
+                smallest = parent
+            if (right <= len(self)) and (heap[parent] > heap[right]):
+                smallest = right
+            # swap if necessary
+            if smallest != parent:
+                smallest_key = self.heap[smallest]
+                self.heap[smallest] = self.heap[parent]
+                self.heap[parent] = smallest_key
+            else:
+                break
+            # update parent
+            parent = smallest
+        self.heap = heap
+        return heap_min
+
 
 class Simulation:
     """State needed to compute a circuit's state as it evolves over time."""
