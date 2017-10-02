@@ -397,7 +397,7 @@ class PriorityQueue:
                 smallest = left
             else:
                 smallest = parent
-            if (right <= len(self)) and (heap[parent] > heap[right]):
+            if (right <= len(self)) and (heap[smallest] > heap[right]):
                 smallest = right
             # swap if necessary
             if smallest != parent:
