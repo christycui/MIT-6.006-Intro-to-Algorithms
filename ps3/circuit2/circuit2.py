@@ -165,7 +165,51 @@ class RangeIndex(object):
       if first_key <= key <= last_key:
         result += 1
     return result
-  
+
+class BlitRangeIndex(object):
+  """Sorted array-based range index implementation"""
+  def __init__(self):
+    """Initialize empty range index"""
+    self.data = []
+
+  def add(self, key):
+    """Inserts a key in the range index"""
+    if key is None:
+      raise ValueError('Cannot insert None in the index')
+    self.data.insert(self._binary_search(key), key)
+
+  def remove(self, key):
+    """Removes a key from the range index."""
+    index = self._binary_search(key)
+    if index < len(self.data) and self.data[index] == key:
+      self.data.pop(index)
+
+  def list(self, low_key, high_key):
+    """List of values for the keys that fall within [first_key, last_key]."""
+    low_index = self._binary_search(low_key)
+    high_index = self._binary_search(high_key)
+    return self.data[low_index:high_index]
+
+  def count(self, low_key, high_key):
+    """Number of keys that fall within [first_key, last_key]."""
+    low_index = self._binary_search(low_key)
+    high_index = self._binary_search(high_key)
+    return high_key - low_key
+
+  def _binary_search(self, key):
+    """Binary search for the given key in the sorted array."""
+    low, high = 0, len(self.data) - 1
+    while low <= high:
+      mid = (low+high) // 2
+      mid_key = self.data[mid]
+      if key < mid_key:
+        high = mid - 1
+      elif key > mid_key:
+        low = mid + 1
+      else:
+        return mid
+    return high + 1
+
 class TracedRangeIndex(RangeIndex):
   """Augments RangeIndex to build a trace for the visualizer."""
   
@@ -326,10 +370,13 @@ class CrossVerifier(object):
 
   def _events_from_layer(self, layer):
     """Populates the sweep line events from the wire layer."""
-    left_edge = min([wire.x1 for wire in layer.wires.values()])
     for wire in layer.wires.values():
+      # order of events: add -> query -> delete
       if wire.is_horizontal():
-        self.events.append([left_edge, 0, wire.object_id, 'add', wire])
+        # add when met with left endpoint
+        self.events.append([wire.x1, 0, wire.object_id, 'add', wire])
+        # delete when met with right endpoint
+        self.events.append([wire.x2, 2, wire.object_id, 'delete', wire])
       else:
         self.events.append([wire.x1, 1, wire.object_id, 'query', wire])
 
@@ -339,25 +386,25 @@ class CrossVerifier(object):
       result = 0
     else:
       result = self.result_set
-
+    
     for event in self.events:
       event_x, event_type, wire = event[0], event[3], event[4]
-      
+      self.trace_sweep_line(event_x)
+
       if event_type == 'add':
         self.index.add(KeyWirePair(wire.y1, wire))
+      elif event_type == 'delete':
+        self.index.remove(KeyWirePair(wire.y1, wire))
       elif event_type == 'query':
-        self.trace_sweep_line(event_x)
         cross_wires = []
         for kwp in self.index.list(KeyWirePairL(wire.y1),
                                    KeyWirePairH(wire.y2)):
-          if wire.intersects(kwp.wire):
-            cross_wires.append(kwp.wire)
+          cross_wires.append(kwp.wire)
         if count_only:
           result += len(cross_wires)
         else:
           for cross_wire in cross_wires:
             result.add_crossing(wire, cross_wire)
-
     return result
   
   def trace_sweep_line(self, x):
