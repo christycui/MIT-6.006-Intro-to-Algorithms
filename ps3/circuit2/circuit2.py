@@ -210,6 +210,8 @@ class BlitRangeIndex(object):
         return mid
     return high + 1
 
+RangeIndex = BlitRangeIndex
+
 class TracedRangeIndex(RangeIndex):
   """Augments RangeIndex to build a trace for the visualizer."""
   
