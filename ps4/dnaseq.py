@@ -10,20 +10,49 @@ class Multidict:
     # Initializes a new multi-value dictionary, and adds any key-value
     # 2-tuples in the iterable sequence pairs to the data structure.
     def __init__(self, pairs=[]):
-        raise Exception("Not implemented!")
+        self.dict = dict()
+        if pairs:
+            for pair in pairs:
+                key, value = pair[0], pair[1]
+                self.put(key, value)
+
     # Associates the value v with the key k.
     def put(self, k, v):
-        raise Exception("Not implemented!")
+        if k in self.dict:
+            self.dict[k].append(v)
+        else:
+            self.dict[k] = [v]
+    
     # Gets any values that have been associated with the key k; or, if
     # none have been, returns an empty sequence.
     def get(self, k):
-        raise Exception("Not implemented!")
+        if k in self.dict:
+            return self.dict[k]
+        else:
+            return []
 
 # Given a sequence of nucleotides, return all k-length subsequences
 # and their hashes.  (What else do you need to know about each
 # subsequence?)
 def subsequenceHashes(seq, k):
-    raise Exception("Not implemented!")
+    subseq = ''
+    while len(subseq) < k:
+        new_c = next(seq)
+        subseq += new_c
+    rh = RollingHash(subseq)
+    pos = 0
+    try:
+        while True:
+            if len(subseq) < k:
+                new_c = next(seq)
+                subseq += new_c
+                pos += 1
+                rh.slide(prev_letter, new_c)
+            yield rh.current_hash(), (subseq, pos)
+            prev_letter = subseq[0]
+            subseq = subseq[1:]
+    except StopIteration:
+        return
 
 # Similar to subsequenceHashes(), but returns one k-length subsequence
 # every m nucleotides.  (This will be useful when you try to use two
@@ -36,11 +65,15 @@ def intervalSubsequenceHashes(seq, k, m):
 # that return nucleotides.  The table is built by computing one hash
 # every m nucleotides (for m >= k).
 def getExactSubmatches(a, b, k, m):
-    raise Exception("Not implemented!")
+    table = Multidict(subsequenceHashes(a, k))
+    for b_hash, (b_sub, b_pos) in subsequenceHashes(b, k):
+        for a_match in table.get(b_hash):
+            if a_match[0] == b_sub:
+                yield a_match[1], b_pos
 
 if __name__ == '__main__':
     if len(sys.argv) != 4:
-        print 'Usage: {0} [file_a.fa] [file_b.fa] [output.png]'.format(sys.argv[0])
+        print('Usage: {0} [file_a.fa] [file_b.fa] [output.png]'.format(sys.argv[0]))
         sys.exit(1)
 
     # The arguments are, in order: 1) Your getExactSubmatches
